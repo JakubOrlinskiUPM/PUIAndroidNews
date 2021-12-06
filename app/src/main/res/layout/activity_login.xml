@@ -1,9 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".LoginActivity">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_margin="16dp">
+
+        <TextView
+            android:id="@+id/usernameHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/usernameHeader" />
+
+        <EditText
+            android:id = "@+id/username"
+            android:layout_width = "match_parent"
+            android:layout_height = "wrap_content"
+            android:ems="10"
+            android:inputType="text"
+            android:hint="@string/usernameHint"
+            android:textSize="20sp"
+            android:layout_marginBottom="20dp"
+            android:autofillHints="username"
+            />
+
+        <TextView
+            android:id="@+id/passwordHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/passwordHeader" />
+
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPassword"
+            android:hint="@string/passwordHint"
+            android:textSize="20sp"
+            android:layout_marginBottom="20dp"
+            android:autofillHints="password"
+            />
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/login"
+            android:onClick = "loginAttempt"
+            />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

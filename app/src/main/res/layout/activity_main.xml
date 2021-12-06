@@ -11,10 +11,34 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <androidx.appcompat.widget.Toolbar
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:layout_scrollFlags="scroll|enterAlways"></androidx.appcompat.widget.Toolbar>
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/loginStatus"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:text="@string/user"
+                android:textColor="#FDFDFD"
+                android:textSize="20sp" />
+
+            <Button
+                android:id="@+id/loginButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:backgroundTint="@color/teal_200"
+                android:text="@string/login"
+                android:onClick = "login"
+                />
+
+        </LinearLayout>
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs"
@@ -25,6 +49,7 @@
             app:tabMode="scrollable">
 
         </com.google.android.material.tabs.TabLayout>
+
     </com.google.android.material.appbar.AppBarLayout>
 
     <LinearLayout
@@ -35,7 +60,9 @@
         <ListView
             android:id="@+id/articleListView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent" >
+
+        </ListView>
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -44,5 +71,7 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
         android:src="@android:drawable/ic_input_add"
-        tools:ignore="SpeakableTextPresentCheck,SpeakableTextPresentCheck" />"
+        tools:ignore="SpeakableTextPresentCheck,SpeakableTextPresentCheck"
+        android:contentDescription="@string/addArticleDescription" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -53,9 +53,16 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         tools:context=".MainActivity">
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_weight="1" />
 
         <ListView
             android:id="@+id/articleListView"

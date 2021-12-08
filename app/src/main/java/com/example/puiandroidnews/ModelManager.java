@@ -1,5 +1,13 @@
 package com.example.puiandroidnews;
 
+import com.example.puiandroidnews.exceptions.AuthenticationError;
+import com.example.puiandroidnews.exceptions.ServerCommunicationError;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
+import org.json.simple.parser.ParseException;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -10,19 +18,10 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.PasswordAuthentication;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
-
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
-import org.json.simple.parser.ParseException;
-
-import com.example.puiandroidnews.exceptions.AuthenticationError;
-import com.example.puiandroidnews.exceptions.ServerCommunicationError;
 
 public class ModelManager {
 	
@@ -36,8 +35,8 @@ public class ModelManager {
 
 	private boolean requireSelfSigned = false;
 	
-	public static final String ATTR_LOGIN_USER = "username";
-	public static final String ATTR_LOGIN_PASS = "password";
+	public static final String ATTR_LOGIN_USER = "DEV_TEAM_02";
+	public static final String ATTR_LOGIN_PASS = "123502";
 	public static final String ATTR_SERVICE_URL = "service_url";
 	public static final String ATTR_REQUIRE_SELF_CERT = "require_self_signed_cert";
 	public static final String ATTR_PROXY_HOST = "";

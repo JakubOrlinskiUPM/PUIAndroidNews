@@ -33,7 +33,7 @@ public class ModelManager {
 	private boolean isAdministrator = false;
 	
 	private String serviceUrl ;
-	
+
 	private boolean requireSelfSigned = false;
 	
 	public static final String ATTR_LOGIN_USER = "username";
@@ -247,6 +247,10 @@ public class ModelManager {
 	 */
 	public String getIdUser(){
 		return idUser;
+	}
+
+	public String getApikey() {
+		return apikey;
 	}
 
 	/**

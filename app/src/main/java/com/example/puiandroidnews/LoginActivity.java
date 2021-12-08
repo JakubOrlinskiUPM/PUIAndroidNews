@@ -3,8 +3,11 @@ package com.example.puiandroidnews;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -14,10 +17,20 @@ import java.util.Properties;
 
 public class LoginActivity extends AppCompatActivity {
 
+
+    private String userID;
+    private String apiKey;
+    public static String KEY_BOOLEAN = "rememberBoolean";
+    public static String KEY_API= "apiKey";
+    public static String KEY_USERNAME= "usernameKey";
+    public static String KEY_PASSWORD = "passwordKey";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        userID = "";
+        apiKey = "";
     }
 
     public void loginAttempt(View view) {
@@ -35,6 +48,14 @@ public class LoginActivity extends AppCompatActivity {
         Thread thread = new Thread(() -> {
             try {
                 ModelManager modelManager = new ModelManager(props);
+                this.userID = modelManager.getIdUser();
+                this.apiKey = modelManager.getApikey();
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+                SharedPreferences.Editor ed = prefs.edit();
+                ed.putString(KEY_API, apiKey);
+                ed.putString(KEY_USERNAME, userID);
+                ed.putString(KEY_PASSWORD, password);
+                ed.apply();
             } catch (AuthenticationError authenticationError) {
                 authenticationError.printStackTrace();
                 // add toast
@@ -54,6 +75,16 @@ public class LoginActivity extends AppCompatActivity {
         System.out.println("Successfully logged in.");
         finish();
 
+    }
+
+    public void rememberMeClicked(View view) {
+        // Is the view now checked?
+        boolean checked = ((CheckBox) view).isChecked();
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor ed = prefs.edit();
+        ed.putBoolean(KEY_BOOLEAN, checked);
+        ed.apply();
     }
 
     //TODO: add remember me functionality and use remote authentication

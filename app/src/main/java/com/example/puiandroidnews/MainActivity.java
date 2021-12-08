@@ -2,7 +2,9 @@ package com.example.puiandroidnews;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -26,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
     ArticleAdapter adapter;
     List<Article> data;
     static Boolean loggedIn = false;
+    private String userID = "";
+    private String apiKey = "";
 
     List<String> tabs = Arrays.asList("All", "National", "International", "Sport", "Economy");
 
@@ -65,10 +69,28 @@ public class MainActivity extends AppCompatActivity {
         Properties props = new Properties();
         props.setProperty(ModelManager.ATTR_SERVICE_URL, "https://sanger.dia.fi.upm.es/pmd-task/");
         try {
+
+            // check if user wanted his authentication to be remembered
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+            if (prefs.getBoolean(LoginActivity.KEY_BOOLEAN, false)) {
+                // he authenticated before
+                if (prefs.contains(LoginActivity.KEY_API) && prefs.contains(LoginActivity.KEY_USERNAME)) {
+                    loggedIn = true;
+                    this.userID = prefs.getString(LoginActivity.KEY_USERNAME, "");
+                    this.apiKey = prefs.getString(LoginActivity.KEY_API, "");
+                    String password = prefs.getString(LoginActivity.KEY_PASSWORD, "");
+                    props.setProperty(ModelManager.ATTR_LOGIN_USER, this.userID);
+                    props.setProperty(ModelManager.ATTR_LOGIN_PASS, password);
+                    // TODO: Not sure how having the apiKey helps, since its not an attribute for ModelManager?
+                }
+            }
+
             modelManager = new ModelManager(props);
 
             GetArticleTask task = new GetArticleTask(modelManager, this);
             new Thread(task).start();
+
+
 
         } catch (AuthenticationError authenticationError) {
             authenticationError.printStackTrace();
@@ -99,6 +121,13 @@ public class MainActivity extends AppCompatActivity {
             // log out user
             loggedIn = false;
             updateLabelsRegardingLoginStatus();
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+            SharedPreferences.Editor ed = prefs.edit();
+            ed.remove(LoginActivity.KEY_USERNAME);
+            ed.remove(LoginActivity.KEY_PASSWORD);
+            ed.remove(LoginActivity.KEY_API);
+            ed.putBoolean(LoginActivity.KEY_BOOLEAN, false);
+            ed.apply();
         }
 
     }
@@ -124,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
             loginButton.setText("Log in");
             // change status
             TextView loginStatus = findViewById(R.id.loginStatus);
-            loginStatus.setText("Currently not logged in " );
+            loginStatus.setText("Currently not logged in!" );
         }
     }
 }

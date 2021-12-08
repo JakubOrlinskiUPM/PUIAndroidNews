@@ -1,19 +1,23 @@
 package com.example.puiandroidnews;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.puiandroidnews.exceptions.AuthenticationError;
+import com.example.puiandroidnews.exceptions.ServerCommunicationError;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.Arrays;
@@ -105,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void routeToArticle(Article article) {
+        //Intent intent = new Intent(getApplicationContext(), EditArticleActivity.class);
         Intent intent = new Intent(getApplicationContext(), ShowArticleActivity.class);
         intent.putExtra(PARAM_ARTICLE, article.getId());
         startActivity(intent);

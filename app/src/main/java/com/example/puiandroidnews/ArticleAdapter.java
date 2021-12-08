@@ -1,11 +1,18 @@
 package com.example.puiandroidnews;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.text.Html;
+import android.util.Base64;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.example.puiandroidnews.exceptions.ServerCommunicationError;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +20,7 @@ import java.util.List;
 public class ArticleAdapter extends BaseAdapter implements Filterable {
     MainActivity activity;
     private List<Article> data = null;
-    private List<Article>filteredData = null;
+    private List<Article> filteredData = null;
     private final ItemFilter mFilter = new ItemFilter();
 
 
@@ -49,11 +56,34 @@ public class ArticleAdapter extends BaseAdapter implements Filterable {
             convertView = View.inflate(activity, R.layout.article_list_item, null);
         }
 
+        Article article = filteredData.get(position);
         TextView articleTitleLabel = convertView.findViewById(R.id.articleTitleLabel);
-        articleTitleLabel.setText(filteredData.get(position).getTitleText());
+        articleTitleLabel.setText(article.getTitleText());
+
+        TextView articleAbstractLabel = convertView.findViewById(R.id.articleAbstractLabel);
+        articleAbstractLabel.setText(Html.fromHtml(article.getAbstractText(), Html.FROM_HTML_MODE_COMPACT));
 
         TextView articleCategoryLabel = convertView.findViewById(R.id.articleCategoryLabel);
-        articleCategoryLabel.setText(filteredData.get(position).getCategory());
+        articleCategoryLabel.setText(article.getCategory());
+
+        ImageView articleImageView = convertView.findViewById(R.id.articleImageView);
+        Bitmap bitmap = null;
+        try {
+            Image img = article.getImage();
+            if (img != null) {
+                String str = img.getImage();
+                if (str != null) {
+                    bitmap = stringToBitMap(str);
+                }
+            }
+        } catch (ServerCommunicationError serverCommunicationError) {
+            System.out.println("oh no");
+        }
+        if (bitmap == null) {
+            articleImageView.setImageResource(R.drawable.fallback_article_image);
+        } else {
+            articleImageView.setImageBitmap(bitmap);
+        }
 
         convertView.setOnClickListener(v -> {
             activity.routeToArticle(filteredData.get(position));
@@ -61,6 +91,18 @@ public class ArticleAdapter extends BaseAdapter implements Filterable {
 
         return convertView;
     }
+
+    public Bitmap stringToBitMap(String encodedString) {
+        try {
+            byte[] encodeByte = Base64.decode(encodedString, Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+            return bitmap;
+        } catch (Exception e) {
+            e.getMessage();
+            return null;
+        }
+    }
+
 
     @Override
     public Filter getFilter() {

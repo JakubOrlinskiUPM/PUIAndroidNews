@@ -47,6 +47,7 @@ public class EditArticleActivity extends AppCompatActivity {
 
                 article = modelManager.getArticle(articleId);
 
+
                 TextView title = findViewById(R.id.text_title);
                 TextView articleAbstract = findViewById(R.id.text_abstarct);
                 TextView body = findViewById(R.id.text_body);
@@ -59,6 +60,8 @@ public class EditArticleActivity extends AppCompatActivity {
                 category.setText(article.getCategory());
 
                 image.setImageBitmap(Utils.base64StringToImg(article.getImage().getImage()));
+
+                article.setId(articleId);
 
             } catch (AuthenticationError authenticationError) {
                 authenticationError.printStackTrace();
@@ -93,7 +96,11 @@ public class EditArticleActivity extends AppCompatActivity {
                 Thread thread = new Thread(() -> {
                     try {
                         ModelManager modelManager = new ModelManager(props);
-                        //modelManager.save(article.getImage());
+
+//                        TextView body = findViewById(R.id.text_body);
+//                        body.setText(String.valueOf(article.getId()));
+
+                        modelManager.save(article);
 
                         Intent intent = new Intent(getApplicationContext(), ShowArticleActivity.class);
                         intent.putExtra(PARAM_ARTICLE, article.getId());

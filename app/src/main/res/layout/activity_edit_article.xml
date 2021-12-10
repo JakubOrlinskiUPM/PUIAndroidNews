@@ -11,14 +11,12 @@
         android:id="@+id/text_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Title"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
 
     <TextView
         android:id="@+id/text_abstarct"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="absract"
         android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
     <ImageView
@@ -34,17 +32,15 @@
         android:text="Change image" />
 
     <TextView
-        android:id="@+id/text_body"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="body" />
-
-    <TextView
         android:id="@+id/text_category"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="category"
         android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/text_body"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <Button
         android:id="@+id/btn_save"

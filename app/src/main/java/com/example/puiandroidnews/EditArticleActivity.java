@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -31,6 +32,7 @@ public class EditArticleActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_article);
 
@@ -59,7 +61,25 @@ public class EditArticleActivity extends AppCompatActivity {
                 body.setText(article.getBodyText());
                 category.setText(article.getCategory());
 
-                image.setImageBitmap(Utils.base64StringToImg(article.getImage().getImage()));
+                //image.setImageBitmap(Utils.base64StringToImg(article.getImage().getImage()));
+
+                Bitmap bitmap = null;
+                try {
+                    Image img = article.getImage();
+                    if (img != null) {
+                        String str = img.getImage();
+                        if (str != null) {
+                            bitmap = stringToBitMap(str);
+                        }
+                    }
+                } catch (ServerCommunicationError serverCommunicationError) {
+                    System.out.println("oh no");
+                }
+                if (bitmap == null) {
+                    image.setImageResource(R.drawable.fallback_article_image);
+                } else {
+                    image.setImageBitmap(bitmap);
+                }
 
                 article.setId(articleId);
 
@@ -141,6 +161,18 @@ public class EditArticleActivity extends AppCompatActivity {
                 }
                 break;
             default:
+        }
+    }
+
+
+    public Bitmap stringToBitMap(String encodedString) {
+        try {
+            byte[] encodeByte = Base64.decode(encodedString, Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+            return bitmap;
+        } catch (Exception e) {
+            e.getMessage();
+            return null;
         }
     }
 

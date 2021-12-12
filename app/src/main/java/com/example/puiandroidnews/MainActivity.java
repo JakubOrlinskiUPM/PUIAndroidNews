@@ -21,7 +21,7 @@ import java.util.Properties;
 
 public class MainActivity extends AppCompatActivity {
 
-    static String PARAM_ARTICLE = "article";
+    public static String PARAM_ARTICLE = "article";
 
     public static ModelManager modelManager;
     ArticleAdapter adapter;

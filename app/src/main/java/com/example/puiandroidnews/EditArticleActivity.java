@@ -111,15 +111,16 @@ public class EditArticleActivity extends AppCompatActivity {
                     try {
                         MainActivity.modelManager.save(article);
 
-                        Intent intent = new Intent(getApplicationContext(), ShowArticleActivity.class);
-                        intent.putExtra(MainActivity.PARAM_ARTICLE, article.getId());
-                        startActivity(intent);
 
                     }  catch (Exception e) {
                         e.printStackTrace();
                     }
                 });
                 thread.start();
+
+                Intent intent = new Intent(getApplicationContext(), ShowArticleActivity.class);
+                intent.putExtra(MainActivity.PARAM_ARTICLE, article.getId());
+                startActivity(intent);
             }
         });
 

@@ -7,45 +7,60 @@
     android:orientation="vertical"
     tools:context=".EditArticleActivity">
 
-    <TextView
-        android:id="@+id/text_title"
+    <ScrollView
+        android:id="@+id/scroll_edit"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/text_abstarct"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/image_edit"
-        android:layout_width="wrap_content"
-        android:layout_height="400px"
-        app:srcCompat="@drawable/fallback_article_image" />
+        <TextView
+            android:id="@+id/text_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
 
-    <Button
-        android:id="@+id/btn_change_image"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Change image" />
+        <TextView
+            android:id="@+id/text_abstarct"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
-    <TextView
-        android:id="@+id/text_category"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textStyle="bold" />
+        <ImageView
+            android:id="@+id/image_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="400px"
+            app:srcCompat="@drawable/fallback_article_image" />
 
-    <TextView
-        android:id="@+id/text_body"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <Button
+            android:id="@+id/btn_change_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Change image" />
 
-    <Button
-        android:id="@+id/btn_save"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Save" />
+        <TextView
+            android:id="@+id/text_category"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/text_body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/btn_save"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Save" />
+
+</LinearLayout>
+    </ScrollView>
+
+
 
 </LinearLayout>

@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -25,8 +26,6 @@ import java.util.Properties;
 
 public class EditArticleActivity extends AppCompatActivity {
 
-    ModelManager modelManager;
-    static String PARAM_ARTICLE = "article";
     private static final int CODE_OPEN_IMAGE = 1;
     Article article;
 
@@ -37,54 +36,52 @@ public class EditArticleActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_article);
 
         Intent intent = getIntent();
-        int articleId = intent.getIntExtra(PARAM_ARTICLE,-1);
+        int articleId = intent.getIntExtra(MainActivity.PARAM_ARTICLE,-1);
 
-        Properties props = new Properties();
-        props.setProperty(ModelManager.ATTR_SERVICE_URL, "https://sanger.dia.fi.upm.es/pmd-task/");
+        TextView title = findViewById(R.id.text_title);
+        TextView articleAbstract = findViewById(R.id.text_abstarct);
+        TextView body = findViewById(R.id.text_body);
+        TextView category = findViewById(R.id.text_category);
+        ImageView image = findViewById(R.id.image_edit);
 
         // Make sure we connect in the background and not in the main thread
         Thread thread = new Thread(() -> {
             try {
-                ModelManager modelManager = new ModelManager(props);
+                article = MainActivity.modelManager.getArticle(articleId);
 
-                article = modelManager.getArticle(articleId);
+                runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+
+                        title.setText(article.getTitleText());
+                        articleAbstract.setText(Html.fromHtml(article.getAbstractText(), Html.FROM_HTML_MODE_COMPACT));
+                        body.setText(Html.fromHtml(article.getBodyText(), Html.FROM_HTML_MODE_COMPACT));
+                        category.setText(article.getCategory());
 
 
-                TextView title = findViewById(R.id.text_title);
-                TextView articleAbstract = findViewById(R.id.text_abstarct);
-                TextView body = findViewById(R.id.text_body);
-                TextView category = findViewById(R.id.text_category);
-                ImageView image = findViewById(R.id.image_edit);
+                        System.out.println(article.toString());
 
-                title.setText(article.getTitleText());
-                articleAbstract.setText(article.getAbstractText());
-                body.setText(article.getBodyText());
-                category.setText(article.getCategory());
-
-                //image.setImageBitmap(Utils.base64StringToImg(article.getImage().getImage()));
-
-                Bitmap bitmap = null;
-                try {
-                    Image img = article.getImage();
-                    if (img != null) {
-                        String str = img.getImage();
-                        if (str != null) {
-                            bitmap = stringToBitMap(str);
+                        Bitmap bitmap = null;
+                        try {
+                            Image img = article.getImage();
+                            if (img != null) {
+                                String str = img.getImage();
+                                if (str != null) {
+                                    bitmap = stringToBitMap(str);
+                                }
+                            }
+                        } catch (ServerCommunicationError serverCommunicationError) {
+                            System.out.println("oh no");
+                        }
+                        if (bitmap == null) {
+                            image.setImageResource(R.drawable.fallback_article_image);
+                        } else {
+                            image.setImageBitmap(bitmap);
                         }
                     }
-                } catch (ServerCommunicationError serverCommunicationError) {
-                    System.out.println("oh no");
-                }
-                if (bitmap == null) {
-                    image.setImageResource(R.drawable.fallback_article_image);
-                } else {
-                    image.setImageBitmap(bitmap);
-                }
+                });
 
-                article.setId(articleId);
-
-            } catch (AuthenticationError authenticationError) {
-                authenticationError.printStackTrace();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -110,32 +107,21 @@ public class EditArticleActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Properties props = new Properties();
-                props.setProperty(ModelManager.ATTR_SERVICE_URL, "https://sanger.dia.fi.upm.es/pmd-task/");
-
                 Thread thread = new Thread(() -> {
                     try {
-                        ModelManager modelManager = new ModelManager(props);
-
-//                        TextView body = findViewById(R.id.text_body);
-//                        body.setText(String.valueOf(article.getId()));
-
-                        modelManager.save(article);
+                        MainActivity.modelManager.save(article);
 
                         Intent intent = new Intent(getApplicationContext(), ShowArticleActivity.class);
-                        intent.putExtra(PARAM_ARTICLE, article.getId());
+                        intent.putExtra(MainActivity.PARAM_ARTICLE, article.getId());
                         startActivity(intent);
 
-                    } catch (AuthenticationError authenticationError) {
-                        authenticationError.printStackTrace();
-                    } catch (Exception e) {
+                    }  catch (Exception e) {
                         e.printStackTrace();
                     }
                 });
                 thread.start();
             }
         });
-
 
     }
 

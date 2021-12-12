@@ -37,14 +37,22 @@ public class LoginActivity extends AppCompatActivity {
         String username = usernameField.getText().toString();
         String password = passwordField.getText().toString();
 
-//        // Make sure we connect in the background and not in the main thread
+        // Make sure we connect in the background and not in the main thread
         Thread thread = new Thread(() -> {
             try {
                 MainActivity.modelManager.login(username, password);
 
                 // successful login, since no authentication error
                 MainActivity.loggedIn = true;
-                System.out.println("Successfully logged in.");
+
+                this.userID = MainActivity.modelManager.getIdUser();
+                this.apiKey = MainActivity.modelManager.getApikey();
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+                SharedPreferences.Editor ed = prefs.edit();
+                ed.putString(KEY_API, apiKey);
+                ed.putString(KEY_USERNAME, username);
+                ed.putString(KEY_PASSWORD, password);
+                ed.apply();
 
                 runOnUiThread(this::finish);
             } catch (AuthenticationError authenticationError) {

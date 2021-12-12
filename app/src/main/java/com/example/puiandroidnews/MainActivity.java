@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     ArticleAdapter adapter;
     List<Article> data;
     static Boolean loggedIn = false;
-    private String userID = "";
+    private String username = "";
     private String apiKey = "";
 
     List<String> tabs = Arrays.asList("All", "National", "International", "Sport", "Economy");
@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Tabs
         TabLayout tabLayout = findViewById(R.id.tabs);
-        for (String tab: tabs) {
+        for (String tab : tabs) {
             tabLayout.addTab(tabLayout.newTab().setText(tab));
         }
 
@@ -67,39 +67,49 @@ public class MainActivity extends AppCompatActivity {
     void setupArticleData() {
         Properties props = new Properties();
         props.setProperty(ModelManager.ATTR_SERVICE_URL, "https://sanger.dia.fi.upm.es/pmd-task/");
-        try {
+        // check if user wanted his authentication to be remembered
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        if (prefs.getBoolean(LoginActivity.KEY_BOOLEAN, false)) {
+            // he authenticated before
+            if (prefs.contains(LoginActivity.KEY_API) && prefs.contains(LoginActivity.KEY_USERNAME)) {
+                loggedIn = true;
+                this.username = prefs.getString(LoginActivity.KEY_USERNAME, "");
+                this.apiKey = prefs.getString(LoginActivity.KEY_API, "");
+                String password = prefs.getString(LoginActivity.KEY_PASSWORD, "");
+                props.setProperty(ModelManager.ATTR_LOGIN_USER, this.username);
+                props.setProperty(ModelManager.ATTR_LOGIN_PASS, password);
+                // TODO: Not sure how having the apiKey helps, since its not an attribute for ModelManager?
+            }
+        }
 
-            // check if user wanted his authentication to be remembered
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-            if (prefs.getBoolean(LoginActivity.KEY_BOOLEAN, false)) {
-                // he authenticated before
-                if (prefs.contains(LoginActivity.KEY_API) && prefs.contains(LoginActivity.KEY_USERNAME)) {
-                    loggedIn = true;
-                    this.userID = prefs.getString(LoginActivity.KEY_USERNAME, "");
-                    this.apiKey = prefs.getString(LoginActivity.KEY_API, "");
-                    String password = prefs.getString(LoginActivity.KEY_PASSWORD, "");
-                    props.setProperty(ModelManager.ATTR_LOGIN_USER, this.userID);
-                    props.setProperty(ModelManager.ATTR_LOGIN_PASS, password);
-                    // TODO: Not sure how having the apiKey helps, since its not an attribute for ModelManager?
+        new Thread(() -> {
+            try {
+                modelManager = new ModelManager(props);
+                this.getArticles();
+            } catch (AuthenticationError authenticationError) {
+                authenticationError.printStackTrace();
+                try {
+                    props.setProperty(ModelManager.ATTR_LOGIN_USER, null);
+                    props.setProperty(ModelManager.ATTR_LOGIN_PASS, null);
+                    modelManager = new ModelManager(props);
+                } catch (AuthenticationError error) {
+                    error.printStackTrace();
                 }
             }
 
-            modelManager = new ModelManager(props);
-
-            this.getArticles();
-
+            runOnUiThread(this::updateLabelsRegardingLoginStatus);
+        }).start();
 
 
-        } catch (AuthenticationError authenticationError) {
-            authenticationError.printStackTrace();
-        }
         adapter = new ArticleAdapter(this);
         ((ListView) findViewById(R.id.articleListView)).setAdapter(adapter);
     }
 
     public void getArticles() {
-        GetArticleTask task = new GetArticleTask(modelManager, this);
-        new Thread(task).start();
+        if (modelManager != null) {
+            GetArticleTask task = new GetArticleTask(this);
+            new Thread(task).start();
+        }
     }
 
     public void receiveData(List<Article> data) {
@@ -136,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
 
             modelManager.logout();
         }
-
+        updateLabelsRegardingLoginStatus();
     }
 
     @Override
@@ -153,14 +163,14 @@ public class MainActivity extends AppCompatActivity {
             loginButton.setText("Log out");
             // change status
             TextView loginStatus = findViewById(R.id.loginStatus);
-            loginStatus.setText("You are logged in!" );
+            loginStatus.setText("You are logged in!");
         } else {
             // change button label
             Button loginButton = findViewById(R.id.loginButton);
             loginButton.setText("Log in");
             // change status
             TextView loginStatus = findViewById(R.id.loginStatus);
-            loginStatus.setText("Currently not logged in!" );
+            loginStatus.setText("Currently not logged in!");
         }
 
         getArticles();

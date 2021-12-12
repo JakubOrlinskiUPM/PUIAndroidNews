@@ -91,7 +91,6 @@ public class ModelManager {
 		serviceUrl = ini.getProperty(ATTR_SERVICE_URL);
 
 		if (ini.containsKey(ATTR_LOGIN_USER) && ini.containsKey(ATTR_LOGIN_PASS)){
-			
 			login(ini.getProperty(ATTR_LOGIN_USER), ini.getProperty(ATTR_LOGIN_PASS));
 		}
 	}
@@ -144,15 +143,15 @@ public class ModelManager {
 				throw new AuthenticationError(connection.getResponseMessage());
 			}  
 		} catch (MalformedURLException e) {  
-			//e.printStackTrace();
+			e.printStackTrace();
 			throw new AuthenticationError(e.getMessage());
 		}  
 		catch (IOException e) {  
-			//e.printStackTrace();
+			e.printStackTrace();
 			throw new AuthenticationError(e.getMessage());
 		} 
 		catch (Exception e) {  
-			//e.printStackTrace();
+			e.printStackTrace();
 			throw new AuthenticationError(e.getMessage());
 		} 
 		

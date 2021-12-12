@@ -5,18 +5,16 @@ import com.example.puiandroidnews.exceptions.ServerCommunicationError;
 import java.util.List;
 
 public class GetArticleTask implements Runnable {
-    ModelManager modelManager;
     MainActivity activity;
 
-    GetArticleTask(ModelManager modelManager, MainActivity activity) {
-        this.modelManager = modelManager;
+    GetArticleTask(MainActivity activity) {
         this.activity = activity;
     }
 
     @Override
     public void run() {
         try {
-            List<Article> res = modelManager.getArticles();
+            List<Article> res = MainActivity.modelManager.getArticles();
             activity.runOnUiThread(() -> {
                 activity.receiveData(res);
             });

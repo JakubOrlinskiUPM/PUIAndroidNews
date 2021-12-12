@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.puiandroidnews.exceptions.AuthenticationError;
+import com.example.puiandroidnews.exceptions.ServerCommunicationError;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.Arrays;
@@ -118,12 +119,20 @@ public class MainActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
     }
 
-    public void routeToArticle(Article article) {
+    public void routeToArticle(Article article) throws ServerCommunicationError {
         //Intent intent = new Intent(getApplicationContext(), EditArticleActivity.class);
         Intent intent = new Intent(getApplicationContext(), ShowArticleActivity.class);
-        intent.putExtra(PARAM_ARTICLE, article.getId());
+        intent.putExtra("articleTitle", article.getTitleText());
+        intent.putExtra("articleAbstract", article.getAbstractText());
+        intent.putExtra("articleCategory", article.getCategory());
+        intent.putExtra("articleBody", article.getBodyText());
+        intent.putExtra("articleUser", article.getIdUser());
+        if (article.getImage() != null) {
+            intent.putExtra("articleImage", article.getImage().getImage());
+        }
         startActivity(intent);
     }
+
 
     // LOGIN FUNCTIONALITY
 

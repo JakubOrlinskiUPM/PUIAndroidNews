@@ -86,7 +86,11 @@ public class ArticleAdapter extends BaseAdapter implements Filterable {
         }
 
         convertView.setOnClickListener(v -> {
-            activity.routeToArticle(filteredData.get(position));
+            try {
+                activity.routeToArticle(filteredData.get(position));
+            } catch (ServerCommunicationError serverCommunicationError) {
+                serverCommunicationError.printStackTrace();
+            }
         });
 
         return convertView;

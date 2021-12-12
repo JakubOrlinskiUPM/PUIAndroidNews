@@ -1,23 +1,18 @@
 package com.example.puiandroidnews;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.puiandroidnews.exceptions.AuthenticationError;
-import com.example.puiandroidnews.exceptions.ServerCommunicationError;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.Arrays;
@@ -28,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
     static String PARAM_ARTICLE = "article";
 
-    ModelManager modelManager;
+    public static ModelManager modelManager;
     ArticleAdapter adapter;
     List<Article> data;
     static Boolean loggedIn = false;
@@ -91,8 +86,7 @@ public class MainActivity extends AppCompatActivity {
 
             modelManager = new ModelManager(props);
 
-            GetArticleTask task = new GetArticleTask(modelManager, this);
-            new Thread(task).start();
+            this.getArticles();
 
 
 
@@ -103,9 +97,15 @@ public class MainActivity extends AppCompatActivity {
         ((ListView) findViewById(R.id.articleListView)).setAdapter(adapter);
     }
 
+    public void getArticles() {
+        GetArticleTask task = new GetArticleTask(modelManager, this);
+        new Thread(task).start();
+    }
+
     public void receiveData(List<Article> data) {
         this.data = data;
         adapter.setData(data);
+        adapter.notifyDataSetChanged();
     }
 
     public void routeToArticle(Article article) {
@@ -133,6 +133,8 @@ public class MainActivity extends AppCompatActivity {
             ed.remove(LoginActivity.KEY_API);
             ed.putBoolean(LoginActivity.KEY_BOOLEAN, false);
             ed.apply();
+
+            modelManager.logout();
         }
 
     }
@@ -160,5 +162,7 @@ public class MainActivity extends AppCompatActivity {
             TextView loginStatus = findViewById(R.id.loginStatus);
             loginStatus.setText("Currently not logged in!" );
         }
+
+        getArticles();
     }
 }

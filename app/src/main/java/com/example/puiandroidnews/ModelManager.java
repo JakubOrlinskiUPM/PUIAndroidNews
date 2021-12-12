@@ -35,8 +35,8 @@ public class ModelManager {
 
 	private boolean requireSelfSigned = false;
 	
-	public static final String ATTR_LOGIN_USER = "DEV_TEAM_02";
-	public static final String ATTR_LOGIN_PASS = "123502";
+	public static final String ATTR_LOGIN_USER = "username";
+	public static final String ATTR_LOGIN_PASS = "password";
 	public static final String ATTR_SERVICE_URL = "service_url";
 	public static final String ATTR_REQUIRE_SELF_CERT = "require_self_signed_cert";
 	public static final String ATTR_PROXY_HOST = "";
@@ -89,7 +89,7 @@ public class ModelManager {
 		}
 		
 		serviceUrl = ini.getProperty(ATTR_SERVICE_URL);
-		
+
 		if (ini.containsKey(ATTR_LOGIN_USER) && ini.containsKey(ATTR_LOGIN_PASS)){
 			
 			login(ini.getProperty(ATTR_LOGIN_USER), ini.getProperty(ATTR_LOGIN_PASS));
@@ -138,24 +138,28 @@ public class ModelManager {
 				apikey = userJsonObject.get("apikey").toString();
 				isAdministrator = userJsonObject.containsKey("administrator");
 
-			}else{  
-				Logger.log(Logger.ERROR,connection.getResponseMessage()); 
+			}else{
+				Logger.log(Logger.ERROR,connection.getResponseMessage());
 
 				throw new AuthenticationError(connection.getResponseMessage());
 			}  
 		} catch (MalformedURLException e) {  
-			//e.printStackTrace();  
+			//e.printStackTrace();
 			throw new AuthenticationError(e.getMessage());
 		}  
 		catch (IOException e) {  
-			//e.printStackTrace();  
+			//e.printStackTrace();
 			throw new AuthenticationError(e.getMessage());
 		} 
 		catch (Exception e) {  
-			//e.printStackTrace();  
+			//e.printStackTrace();
 			throw new AuthenticationError(e.getMessage());
 		} 
 		
+	}
+
+	public void logout() {
+		this.apikey = null;
 	}
 	
 	private String parseHttpStreamResult(HttpURLConnection connection) throws UnsupportedEncodingException, IOException {

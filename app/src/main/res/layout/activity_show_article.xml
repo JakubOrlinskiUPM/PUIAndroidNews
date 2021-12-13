@@ -1,63 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ShowArticleActivity">
+    android:padding="10dp"
+    android:fillViewport="false">
 
-    <TextView
-        android:id="@+id/titleId"
-        style="@style/TextAppearance.AppCompat.Title"
-        android:layout_width="165dp"
-        android:layout_height="23dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="20dp" />
-
-    <TextView
-        android:id="@+id/categoryId"
-        style="@style/TextAppearance.AppCompat.Caption"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="15dp"
-        android:layout_marginBottom="8dp"/>
-
-    <ImageView
-        android:id="@+id/imageId"
+    <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="209dp"
-        android:scaleType="centerCrop"
-        app:srcCompat="@drawable/fallback_article_image"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="135dp" />
-
-    <TextView
-        android:id="@+id/abstractId"
-        style="@style/TextAppearance.AppCompat.Subhead"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="10dp"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        android:orientation="vertical"
+        tools:context=".ShowArticleActivity">
 
-    <TextView
-        android:id="@+id/bodyId"
-        style="@style/TextAppearance.AppCompat.Subhead"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp" />
+        <TextView
+            android:id="@+id/titleId"
+            style="@style/TextAppearance.AppCompat.Title"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"/>
 
-    <TextView
-        android:id="@+id/userId"
-        style="@style/TextAppearance.AppCompat.Caption"
-        android:layout_width="wrap_content"
-        android:layout_height="19dp"
-        android:layout_gravity="end|bottom"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="10dp"/>
-</LinearLayout>
+        <TextView
+            android:id="@+id/categoryId"
+            style="@style/TextAppearance.AppCompat.Subhead"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="8dp"/>
+
+        <ImageView
+            android:id="@+id/imageId"
+            android:layout_width="match_parent"
+            android:layout_height="209dp"
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/fallback_article_image"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="135dp" />
+
+        <TextView
+            android:id="@+id/abstractId"
+            style="@style/TextAppearance.AppCompat.Subhead"
+            android:textStyle="italic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"/>
+
+        <TextView
+            android:id="@+id/bodyId"
+            style="@style/TextAppearance.AppCompat.Subhead"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="fill"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginTop="16dp" />
+
+        <TextView
+            android:id="@+id/userId"
+            style="@style/TextAppearance.AppCompat.Caption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="5dp"/>
+    </LinearLayout>
+
+</ScrollView>

@@ -23,7 +23,6 @@ import java.util.Properties;
 public class ShowArticleActivity extends AppCompatActivity {
 
     private static final String PARAM_ARTICLE = "article";
-    private Article article;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +33,17 @@ public class ShowArticleActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
+        Intent intent = getIntent();
+        int id = intent.getIntExtra(PARAM_ARTICLE, -1);
+
+        DownloadArticleThread d = new DownloadArticleThread(this, id);
+
+        Thread th = new Thread (d);
+        th.start();
+    }
+
+    protected void initialize(Article article) throws ServerCommunicationError {
         TextView article_title = findViewById(R.id.titleId);
         ImageView article_image = findViewById(R.id.imageId);
         TextView article_category = findViewById(R.id.categoryId);
@@ -41,21 +51,18 @@ public class ShowArticleActivity extends AppCompatActivity {
         TextView article_body = findViewById(R.id.bodyId);
         TextView userId = findViewById(R.id.userId);
 
-        Intent intent = getIntent();
-        String articleTitle = intent.getStringExtra("articleTitle");
-        String articleAbstract = intent.getStringExtra("articleAbstract");
-        String articleCategory = intent.getStringExtra("articleCategory");
-        String articleBody = intent.getStringExtra("articleBody");
-        String articleImage = intent.getStringExtra("articleImage");
-        int articleUser = intent.getIntExtra("articleUser", 0);
-
-        article_title.setText(articleTitle);
-        article_abstract.setText(Html.fromHtml(articleAbstract, Html.FROM_HTML_MODE_COMPACT));
-        article_body.setText(Html.fromHtml(articleBody, Html.FROM_HTML_MODE_COMPACT));
-        article_category.setText(articleCategory);
-        //if(articleUser > 0) { userId.setBackgroundResource(articleUser); }
-
-        article_image.setImageBitmap(Utils.base64StringToImg(articleImage));
+        article_title.setText(article.getTitleText());
+        article_abstract.setText(Html.fromHtml(article.getAbstractText(), Html.FROM_HTML_MODE_COMPACT));
+        article_body.setText(Html.fromHtml(article.getBodyText(), Html.FROM_HTML_MODE_COMPACT));
+        article_category.setText(article.getCategory());
+        /**if(article.getIdUser() > 0) {
+         userId.setText(article.getIdUser());
+         }*/
+        if(article.getImage().getImage() != null){
+            article_image.setImageBitmap(Utils.base64StringToImg(article.getImage().getImage()));
+        } else {
+            article_image.setImageResource(R.drawable.fallback_article_image);
+        }
     }
 
     @Override

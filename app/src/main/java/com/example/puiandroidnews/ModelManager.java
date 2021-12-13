@@ -20,6 +20,7 @@ import java.net.PasswordAuthentication;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.Set;
 
@@ -180,8 +181,9 @@ public class ModelManager {
 		if (o instanceof JSONObject){
 			JSONObject jsonResult = (JSONObject) JSONValue.parseWithException(res);
 			Set<String> keys = jsonResult.keySet();
-			if (keys.contains("id"))
-				return Integer.parseInt((String) jsonResult.get("id"));
+			if (keys.contains("id")) {
+				return Integer.parseInt(Objects.requireNonNull(jsonResult.get("id")).toString());
+			}
 			else{
 				throw new ServerCommunicationError("Error: No id in json returned");
 			}	
@@ -405,7 +407,7 @@ public class ModelManager {
 			}else{  
 				throw new ServerCommunicationError(connection.getResponseMessage());
 			}  
-		} catch (Exception e) {  
+		} catch (Exception e) {
 			Logger.log(Logger.ERROR,"Inserting article ["+a+"] : " + e.getClass() + " ( "+e.getMessage() + ")");
 			throw new ServerCommunicationError(e.getClass() + " ( "+e.getMessage() + ")");
 		}

@@ -8,6 +8,7 @@ import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +17,7 @@ import com.example.puiandroidnews.exceptions.AuthenticationError;
 import com.example.puiandroidnews.exceptions.ServerCommunicationError;
 import com.google.android.material.tabs.TabLayout;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
@@ -50,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 String currentTab = tabs.get(tab.getPosition());
-                adapter.getFilter().filter(currentTab);
+                adapter.setFilter(currentTab);
             }
 
             @Override
@@ -86,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
         new Thread(() -> {
             try {
                 modelManager = new ModelManager(props);
-                this.getArticles();
+                runOnUiThread(this::getArticles);
             } catch (AuthenticationError authenticationError) {
                 authenticationError.printStackTrace();
                 try {
@@ -108,6 +110,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void getArticles() {
         if (modelManager != null) {
+            adapter.setData(new ArrayList<>());
+            ProgressBar progressBar = findViewById(R.id.progressBar);
+            progressBar.setIndeterminate(true);
+            progressBar.setVisibility(View.VISIBLE);
+
             GetArticleTask task = new GetArticleTask(this);
             new Thread(task).start();
         }
@@ -117,6 +124,9 @@ public class MainActivity extends AppCompatActivity {
         this.data = data;
         adapter.setData(data);
         adapter.notifyDataSetChanged();
+
+        ProgressBar progressBar = findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.GONE);
     }
 
     public void routeToArticle(Article article) throws ServerCommunicationError {

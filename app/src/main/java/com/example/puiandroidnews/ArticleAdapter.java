@@ -23,6 +23,7 @@ public class ArticleAdapter extends BaseAdapter implements Filterable {
     private List<Article> data = null;
     private List<Article> filteredData = null;
     private final ItemFilter mFilter = new ItemFilter();
+    private String filter;
 
 
     public ArticleAdapter(MainActivity activity) {
@@ -32,6 +33,10 @@ public class ArticleAdapter extends BaseAdapter implements Filterable {
     public void setData(List<Article> data) {
         this.data = data;
         this.filteredData = data;
+        if (this.filter != null) {
+            this.mFilter.filter(this.filter);
+        }
+
         notifyDataSetChanged();
     }
 
@@ -117,6 +122,11 @@ public class ArticleAdapter extends BaseAdapter implements Filterable {
     @Override
     public Filter getFilter() {
         return mFilter;
+    }
+
+    public void setFilter(String fitler) {
+        this.filter = fitler;
+        this.mFilter.filter(fitler);
     }
 
     private class ItemFilter extends Filter {

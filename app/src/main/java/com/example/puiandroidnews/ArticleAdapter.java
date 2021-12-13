@@ -3,6 +3,7 @@ package com.example.puiandroidnews;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.text.Html;
+import android.text.TextUtils;
 import android.util.Base64;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,13 +59,18 @@ public class ArticleAdapter extends BaseAdapter implements Filterable {
 
         Article article = filteredData.get(position);
         TextView articleTitleLabel = convertView.findViewById(R.id.articleTitleLabel);
+        articleTitleLabel.setEllipsize(TextUtils.TruncateAt.END);
+        articleTitleLabel.setSingleLine();
+        articleTitleLabel.setMaxEms(15);
         articleTitleLabel.setText(article.getTitleText());
-
-        TextView articleAbstractLabel = convertView.findViewById(R.id.articleAbstractLabel);
-        articleAbstractLabel.setText(Html.fromHtml(article.getAbstractText(), Html.FROM_HTML_MODE_COMPACT));
 
         TextView articleCategoryLabel = convertView.findViewById(R.id.articleCategoryLabel);
         articleCategoryLabel.setText(article.getCategory());
+
+        TextView articleAbstractLabel = convertView.findViewById(R.id.articleAbstractLabel);
+        articleAbstractLabel.setEllipsize(TextUtils.TruncateAt.END);
+        articleAbstractLabel.setMaxLines(4);
+        articleAbstractLabel.setText(Html.fromHtml(article.getAbstractText(), Html.FROM_HTML_MODE_COMPACT));
 
         ImageView articleImageView = convertView.findViewById(R.id.articleImageView);
         Bitmap bitmap = null;

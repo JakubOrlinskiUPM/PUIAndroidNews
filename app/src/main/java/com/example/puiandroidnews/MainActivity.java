@@ -127,6 +127,7 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("articleCategory", article.getCategory());
         intent.putExtra("articleBody", article.getBodyText());
         intent.putExtra("articleUser", article.getIdUser());
+        intent.putExtra(PARAM_ARTICLE, article.getId());
         if (article.getImage() != null) {
             intent.putExtra("articleImage", article.getImage().getImage());
         }

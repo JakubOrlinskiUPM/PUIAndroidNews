@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     public static ModelManager modelManager;
     ArticleAdapter adapter;
     List<Article> data;
-    static Boolean loggedIn = false;
+    public static Boolean loggedIn = false;
     private String username = "";
     private String apiKey = "";
 

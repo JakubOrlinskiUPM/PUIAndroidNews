@@ -74,7 +74,7 @@ public class ShowArticleActivity extends AppCompatActivity {
             article_image.setImageResource(R.drawable.fallback_article_image);
         }
 
-        if(MainActivity.loggedIn){
+        if (MainActivity.loggedIn) {
 
             Button btn_image_edit = findViewById(R.id.btn_image_edit);
             btn_image_edit.setVisibility(View.VISIBLE);
@@ -90,7 +90,6 @@ public class ShowArticleActivity extends AppCompatActivity {
             });
 
             Button btn_article_save = findViewById(R.id.btn_article_save);
-            btn_article_save.setVisibility(View.VISIBLE);
             btn_article_save.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -99,7 +98,7 @@ public class ShowArticleActivity extends AppCompatActivity {
                             MainActivity.modelManager.save(articleChosen);
                             finish();
 
-                        }  catch (Exception e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                     });
@@ -108,6 +107,8 @@ public class ShowArticleActivity extends AppCompatActivity {
                 }
             });
 
+            Button btn_article_delete = findViewById(R.id.btn_article_delete);
+            btn_article_delete.setVisibility(View.VISIBLE);
         }
     }
 
@@ -120,25 +121,39 @@ public class ShowArticleActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode){
+        switch (requestCode) {
             case CODE_OPEN_IMAGE:
-                if(resultCode == Activity.RESULT_OK){
+                if (resultCode == Activity.RESULT_OK) {
                     InputStream stream = null;
-                    try{
-                        stream =getContentResolver().openInputStream(data.getData());
-                        Bitmap bmp =Utils.createScaledImage( BitmapFactory.decodeStream(stream),500,500);
+                    try {
+                        stream = getContentResolver().openInputStream(data.getData());
+                        Bitmap bmp = Utils.createScaledImage(BitmapFactory.decodeStream(stream), 500, 500);
                         articleChosen.addImage(Utils.imgToBase64String(bmp), "");
 
                         ImageView viewer = findViewById(R.id.imageId);
                         viewer.setImageBitmap(bmp);
-                    }catch(FileNotFoundException | ServerCommunicationError e){
+
+                        Button btn_article_save = findViewById(R.id.btn_article_save);
+                        btn_article_save.setVisibility(View.VISIBLE);
+                    } catch (FileNotFoundException | ServerCommunicationError e) {
                         e.printStackTrace();
                     }
-                }else{
+                } else {
                     Toast.makeText(this, "Action cancelled by user", Toast.LENGTH_SHORT).show();
                 }
                 break;
             default:
         }
+    }
+
+    public void deleteArticle(View view) {
+        new Thread(() -> {
+            try {
+                MainActivity.modelManager.delete(articleChosen);
+                runOnUiThread(this::finish);
+            } catch (ServerCommunicationError serverCommunicationError) {
+                serverCommunicationError.printStackTrace();
+            }
+        }).start();
     }
 }
